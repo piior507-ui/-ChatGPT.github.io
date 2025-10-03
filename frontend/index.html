@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Мой сайт — сделано с ChatGPT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================
+       THEME VARIABLES
+       ===================== */
+    :root{
+      --bg:#f6f8fb;
+      --panel:#ffffff;
+      --muted:#556078;
+      --text:#0b1420;
+      --accent-1:#7c5cff;
+      --accent-2:#00d4ff;
+      --glass: rgba(2,6,23,0.05);
+      --radius:14px;
+      --shadow-strong: 0 18px 50px rgba(10,20,40,0.08);
+      --shadow-soft: 0 8px 24px rgba(10,20,40,0.06);
+      --maxw:1200px;
+      --container-pad:24px;
+      --ease: cubic-bezier(.2,.9,.2,1);
+    }
+    /* dark overrides: note selector targets html[data-theme="dark"] so JS must set attribute on <html> */
+    html[data-theme="dark"]{
+      --bg:#05060a;
+      --panel:#0f161a;
+      --muted:#98a6b3;
+      --text:#e8f0f8;
+      --glass: rgba(255,255,255,0.03);
+      --shadow-strong: 0 18px 50px rgba(2,6,23,0.7);
+      --shadow-soft: 0 8px 24px rgba(2,6,23,0.45);
+    }
+
+    /* Base reset */
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background:radial-gradient(900px 420px at 8% 8%, rgba(124,92,255,0.04), transparent), radial-gradient(640px 360px at 92% 92%, rgba(0,212,255,0.02), transparent), var(--bg);color:var(--text);scroll-behavior:smooth}
+
+    /* Page */
+    .wrap{max-width:var(--maxw);margin:26px auto;padding:var(--container-pad)}
+
+    /* Topbar */
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#041018;font-weight:800}
+    .title{font-weight:800;font-size:16px}
+    .subtitle{font-size:13px;color:var(--muted)}
+
+    .controls{display:flex;gap:12px;align-items:center}
+
+    /* Toggle (keyboard accessible) */
+    .toggle{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border-radius:999px;padding:6px 10px;border:1px solid rgba(0,0,0,0.06);box-shadow:var(--shadow-soft);cursor:pointer}
+    .toggle:focus{outline:2px solid rgba(124,92,255,0.22)}
+    .toggle .label{font-size:13px;color:var(--muted)}
+    .toggle .dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));box-shadow:0 6px 18px rgba(2,6,23,0.12)}
+
+    /* Hero */
+    header.hero{position:relative;border-radius:18px;overflow:hidden;padding:0;background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));border:1px solid rgba(0,0,0,0.04);box-shadow:var(--shadow-strong)}
+    .hero-grid{display:grid;grid-template-columns:1fr 380px;gap:18px;align-items:center;padding:28px}
+    .hero-title{font-size:36px;line-height:1.02;margin:0 0 10px 0;font-weight:800}
+    .hero-sub{margin:0;color:var(--muted);font-size:15px}
+    .hero-figure{width:100%;height:320px;object-fit:cover;border-radius:12px;display:block;transition:transform .9s var(--ease),filter .45s}
+    .hero:hover .hero-figure{transform:scale(1.03)}
+
+    /* Nav */
+    nav{display:flex;gap:12px;align-items:center}
+    .navlink{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:10px;transition:background .18s,color .18s}
+    .navlink.active{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#041018;font-weight:700}
+
+    /* Content */
+    .content{display:grid;grid-template-columns:1fr 360px;gap:22px;margin-top:22px}
+    main{min-width:0}
+    aside.right{position:sticky;top:22px}
+
+    .card{background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.02);box-shadow:var(--shadow-soft);color:var(--text)}
+    h2{margin:0 0 12px 0}
+    p{color:var(--muted);line-height:1.6}
+
+    /* Tech cards */
+    .tech-row{display:flex;gap:12px;flex-wrap:wrap}
+    .tech{flex:1 1 160px;display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.02);cursor:pointer;transition:transform .28s var(--ease),box-shadow .28s}
+    .tech:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(2,6,23,0.12)}
+    .tech img{width:56px;height:56px;border-radius:10px;object-fit:cover}
+
+    /* Detail blocks */
+    .detail{margin-top:12px;padding:16px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);border:1px solid rgba(255,255,255,0.02)}
+    pre{background:rgba(0,0,0,0.04);padding:12px;border-radius:8px;overflow:auto;color:var(--muted);font-family:'JetBrains Mono', monospace;font-size:13px}
+
+    /* Comments */
+    .comment-form{display:flex;flex-direction:column;gap:10px}
+    input[type=text], textarea{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:12px;border-radius:10px;color:var(--text);font-size:14px}
+    textarea{min-height:110px}
+    .row{display:flex;gap:10px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#041018;border:none;cursor:pointer;font-weight:700}
+    .btn.secondary{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06)}
+
+    .comment-list{margin-top:14px;display:flex;flex-direction:column;gap:12px}
+    .comment-item{background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+    .meta{display:flex;align-items:center;gap:10px}
+    .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:#041018}
+
+    /* to-top */
+    .to-top{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:#041018;border:none;cursor:pointer;box-shadow:var(--shadow-strong);transform:translateY(20px);opacity:0;transition:all .28s}
+    .to-top.show{transform:translateY(0);opacity:1}
+
+    /* Parallax */
+    .parallax-layer{position:fixed;left:0;right:0;top:0;height:60vh;pointer-events:none;z-index:-1;opacity:0.12;filter:blur(60px)}
+    .parallax-a{background:linear-gradient(135deg,var(--accent-1),transparent);left:-20%;width:50%;height:40vh;top:-10%}
+    .parallax-b{background:linear-gradient(135deg,var(--accent-2),transparent);right:-10%;width:40%;height:40vh;bottom:-10%}
+
+    /* reveal */
+    .fade-in{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease), transform .6s var(--ease)}
+    .fade-in.visible{opacity:1;transform:none}
+
+    /* responsive */
+    @media (max-width:1024px){.hero-grid{grid-template-columns:1fr 300px}.hero-figure{height:240px}}
+    @media (max-width:820px){.hero-grid{grid-template-columns:1fr}.content{grid-template-columns:1fr}.aside.right{position:relative}.hero-figure{height:200px}}
+
+  </style>
+</head>
+<body>
+
+  <!-- Parallax decorative layers -->
+  <div class="parallax-layer parallax-a" id="layerA"></div>
+  <div class="parallax-layer parallax-b" id="layerB"></div>
+
+  <div class="wrap">
+    <!-- topbar -->
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">AI</div>
+        <div>
+          <div class="title">Мой сайт — сделано с ChatGPT</div>
+          <div class="subtitle">Frontend — HTML/CSS/JS • Backend — Flask + SQLite</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <nav id="topNav">
+          <a class="navlink" href="#about">О проекте</a>
+          <a class="navlink" href="#features">Фичи</a>
+          <a class="navlink" href="#comments">Комментарии</a>
+        </nav>
+
+        <div id="themeToggle" class="toggle" role="button" tabindex="0" aria-pressed="false" title="Переключить тему">
+          <div class="label">Тема</div>
+          <div id="themeDot" class="dot" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- hero -->
+    <header class="hero">
+      <div class="hero-grid">
+        <div class="hero-left">
+          <h1 class="hero-title">Я сделал сайт с помощью <span id="typing" class="typing" aria-hidden="true"></span></h1>
+          <p class="hero-sub">SPA блог-проект: рассказываю как я собрал сайт с ChatGPT, кто что делает и как добавить фичи. Кликаешь — прокручиваемся к нужной секции.</p>
+
+          <div class="hero-actions" style="margin-top:14px">
+            <button id="goComments" class="btn">Оставить комментарий</button>
+            <a class="navlink" href="#features">Узнать больше</a>
+          </div>
+        </div>
+
+        <div>
+          <img class="hero-figure" src="https://msk.top-academy.ru/_images/DtTKXlk3AO0q9mpu9LgeX27En6c=/images/73fa2d43-7146-4828-a56c-1d6bf95f3a4b.jpeg" alt="Hero image">
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <main>
+        <section id="about" class="card fade-in">
+          <h2>О проекте — кратко</h2>
+          <p class="muted">Проект показывает, как быстро собрать аккуратный сайт, получая помощь от ChatGPT. Всё собрано в SPA — одна страница с секциями. Под каждой секцией можно оставлять комментарии (локально или на сервере).</p>
+        </section>
+
+        <section id="features" class="card fade-in" style="margin-top:18px">
+          <h2>Фишки и переходы</h2>
+          <p class="muted">Клик по карточке технологии прокрутит страницу к разделу с подробностями. Комментарии сохраняются в localStorage по теме, и при возможности отправляются на сервер.</p>
+
+          <div class="tech-row" style="margin-top:14px">
+            <div class="tech" data-target="flask">
+              <img src="https://repository-images.githubusercontent.com/596892/21403b63-db85-4177-9553-ef6382a98bf1" alt="Flask">
+              <div>
+                <strong>Flask</strong>
+                <div class="small muted">Backend: API комментариев, SQLite.</div>
+              </div>
+            </div>
+
+            <div class="tech" data-target="js">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuHnJDLOcdm_0b6N6kNj-1OvO9KhKYgqIy0w&s" alt="JS">
+              <div>
+                <strong>JavaScript</strong>
+                <div class="small muted">Интерактив, localStorage и API.</div>
+              </div>
+            </div>
+
+            <div class="tech" data-target="chatgpt">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s" alt="ChatGPT">
+              <div>
+                <strong>ChatGPT</strong>
+                <div class="small muted">Генерация текстов и кода — мой ассистент.</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="flask" class="card fade-in" style="margin-top:18px">
+          <h2>Flask — кратко</h2>
+          <div class="detail">
+            <h3>Что это и зачем</h3>
+            <p>Flask — лёгкий Python фреймворк. У меня он выполняет роль API: хранит комментарии в SQLite и отдаёт статический фронтенд.</p>
+            <hr style="border:none;height:1px;background:rgba(0,0,0,0.04);margin:12px 0">
+            <h3>Пример маршрута</h3>
+            <pre>from flask import Flask, jsonify
+app = Flask(__name__)
+
+@app.route('/api/ping')
+def ping():
+    return jsonify({'ok': True})</pre>
+            <hr style="border:none;height:1px;background:rgba(0,0,0,0.04);margin:12px 0">
+            <h3>Как у меня</h3>
+            <p class="muted">Есть `app.py` с моделью Comment (SQLAlchemy). API: <code>/api/comments</code> — GET/POST. Фронтенд можно отдавать прямо из Flask.</p>
+          </div>
+        </section>
+
+        <section id="js" class="card fade-in" style="margin-top:18px">
+          <h2>JavaScript — кратко</h2>
+          <div class="detail">
+            <h3>Что делает JS</h3>
+            <p>Управляет навигацией по секциям, анимациями, формой комментариев. Сначала пытаемся связаться с сервером; если нет — сохраняем локально.</p>
+            <hr style="border:none;height:1px;background:rgba(0,0,0,0.04);margin:12px 0">
+            <h3>Пример fetch</h3>
+            <pre>fetch('/api/comments')
+  .then(r =&gt; r.json())
+  .then(data =&gt; console.log(data))</pre>
+          </div>
+        </section>
+
+        <section id="chatgpt" class="card fade-in" style="margin-top:18px">
+          <h2>ChatGPT — кратко</h2>
+          <div class="detail">
+            <h3>Роль помощника</h3>
+            <p>ChatGPT формулирует тексты, даёт подсказки по дизайну и генерирует фрагменты кода. Это инструмент — не хранилище данных.</p>
+            <hr style="border:none;height:1px;background:rgba(0,0,0,0.04);margin:12px 0">
+            <h3>Советы</h3>
+            <p class="muted">Когда просишь код — указывай окружение (версия Python, Flask), формат ответа и ограничения безопасности.</p>
+          </div>
+        </section>
+
+        <section id="comments" class="card fade-in" style="margin-top:18px">
+          <h2>Комментарии</h2>
+          <p class="muted">Текущая тема: <strong id="currentTopic">general</strong></p>
+
+          <div class="comment-form" style="margin-top:8px">
+            <input id="name" type="text" placeholder="Имя (будет показано)" maxlength="40" />
+            <textarea id="message" placeholder="Оставь комментарий..." maxlength="1000"></textarea>
+            <div class="row" style="margin-top:6px">
+              <button id="sendBtn" class="btn">Отправить</button>
+              <button id="clearBtn" class="btn secondary">Очистить локально</button>
+            </div>
+          </div>
+
+          <div class="comment-list" id="commentList" aria-live="polite" style="margin-top:12px"></div>
+        </section>
+      </main>
+
+      <aside class="right">
+        <div class="card fade-in">
+          <h3>Коротко</h3>
+          <p class="muted">SPA-страница с секциями, комментариями по теме (локально) и опциональной отправкой на сервер (Flask).</p>
+        </div>
+
+        <div class="card fade-in" style="margin-top:12px">
+          <h3>Полезности</h3>
+          <p class="muted">HTML • CSS • JS • Flask</p>
+          <hr style="border:none;height:1px;background:rgba(0,0,0,0.04);margin:12px 0">
+          <ul class="muted">
+            <li>Тёмная/светлая тема</li>
+            <li>Typing effect</li>
+            <li>Parallax background</li>
+            <li>Комменты по теме</li>
+          </ul>
+        </div>
+
+        <div class="card fade-in center" style="margin-top:12px">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMdM9MEQ0ExL1PmInT3U5I8v63YXBEdoIT0Q&s" alt="ChatGPT" style="width:72px;height:72px;border-radius:12px;margin-bottom:8px">
+          <div class="muted">Сайт сделан при помощи ChatGPT — <a class="inline" href="https://chat.openai.com/" target="_blank">Открыть ChatGPT</a></div>
+        </div>
+      </aside>
+    </div>
+
+    <footer style="max-width:var(--maxw);margin:26px auto 52px auto;padding:8px 0;color:var(--muted);text-align:center">© Мой сайт — сделано с помощью ChatGPT</footer>
+  </div>
+
+  <button class="to-top" id="toTop" title="Наверх">↑</button>
+
+  <script>
+    /* ==========================
+       Helpers & init order
+       ========================== */
+    const qs = s => document.querySelector(s);
+    const qsa = s => Array.from(document.querySelectorAll(s));
+
+    // Ensure throttle is declared before usage
+    function throttle(fn, wait){ let last=0; return (...args)=>{ const now = Date.now(); if(now - last > wait){ last = now; fn(...args); } } }
+
+    /* ==========================
+       THEME: toggle (sets attribute on <html>)
+       ========================== */
+    const root = document.documentElement; // <html>
+    const themeToggle = qs('#themeToggle');
+    const themeDot = qs('#themeDot');
+
+    function applyThemeUI(){
+      const t = root.getAttribute('data-theme') || 'dark';
+      themeDot.style.background = t === 'dark' ? 'linear-gradient(90deg,var(--accent-1),var(--accent-2))' : 'linear-gradient(90deg,var(--accent-2),var(--accent-1))';
+      themeToggle.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false');
+    }
+
+    // initialize from localStorage (do this early)
+    (function initTheme(){
+      try{
+        const s = localStorage.getItem('site_theme');
+        if(s) root.setAttribute('data-theme', s);
+      }catch(e){}
+      applyThemeUI();
+    })();
+
+    // toggle handler (keyboard + click)
+    themeToggle.addEventListener('click', toggleTheme);
+    themeToggle.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); } });
+
+    function toggleTheme(){ const cur = root.getAttribute('data-theme') || 'dark'; const next = cur === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', next); try{ localStorage.setItem('site_theme', next); }catch(e){} applyThemeUI(); }
+
+    /* ==========================
+       Typing effect (hero)
+       ========================== */
+    (function typingEffect(){
+      const el = qs('#typing'); if(!el) return;
+      const words = ['ChatGPT','AI','мной','быстро'];
+      let wi = 0, pos = 0, deleting = false;
+      function step(){ const w = words[wi]; if(!deleting){ pos++; el.textContent = w.slice(0,pos); if(pos === w.length){ deleting = true; setTimeout(step, 900); return; } } else { pos--; el.textContent = w.slice(0,pos); if(pos === 0){ deleting = false; wi = (wi+1) % words.length; setTimeout(step, 300); return; } }
+        setTimeout(step, deleting ? 40 : 80);
+      }
+      step();
+    })();
+
+    /* ==========================
+       Parallax
+       ========================== */
+    const layerA = qs('#layerA');
+    const layerB = qs('#layerB');
+    window.addEventListener('scroll', throttle(()=>{
+      const y = window.scrollY;
+      if(layerA) layerA.style.transform = `translateY(${y * 0.06}px)`;
+      if(layerB) layerB.style.transform = `translateY(${y * -0.04}px)`;
+    }, 20));
+
+    /* ==========================
+       Navigation & active highlight
+       ========================== */
+    qsa('.tech').forEach(card => {
+      card.addEventListener('click', ()=>{
+        const target = card.dataset.target;
+        const id = ['flask','js','chatgpt'].includes(target) ? target : 'about';
+        const el = document.getElementById(id);
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+        setTopic(id);
+        history.replaceState(null, '', `#${id}`);
+      });
+    });
+
+    qsa('nav a').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        e.preventDefault(); const href = a.getAttribute('href').replace('#',''); const el = document.getElementById(href); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); setTopic('general'); history.replaceState(null,'',a.getAttribute('href')); });
+    });
+
+    const navLinks = qsa('.navlink');
+    const sections = ['about','features','flask','js','chatgpt','comments'];
+    function updateActiveNav(){ const mid = window.scrollY + window.innerHeight/2; let active=null; for(const id of sections){ const el=document.getElementById(id); if(!el) continue; const rect = el.getBoundingClientRect(); const top = window.scrollY + rect.top; const bottom = top + rect.height; if(mid >= top && mid <= bottom){ active = id; break } } navLinks.forEach(n=>n.classList.remove('active')); if(active && ['flask','js','chatgpt'].includes(active)){ const link = document.querySelector(`.navlink[href="#${active}"]`); if(link) link.classList.add('active'); } }
+    window.addEventListener('scroll', throttle(updateActiveNav, 120));
+
+    /* Reveal on scroll */
+    document.addEventListener('DOMContentLoaded', ()=>{
+      qsa('.fade-in').forEach(el=>el.classList.add('fade-in'));
+      const io = new IntersectionObserver((entries)=>{ entries.forEach(ent=>{ if(ent.isIntersecting){ ent.target.classList.add('visible'); io.unobserve(ent.target); } }); }, {threshold:0.12});
+      qsa('.fade-in').forEach(el=>io.observe(el));
+    });
+
+    /* ==========================
+       Scroll to top
+       ========================== */
+    const toTop = qs('#toTop');
+    window.addEventListener('scroll', throttle(()=>{ if(window.scrollY > 300) toTop.classList.add('show'); else toTop.classList.remove('show'); }, 80));
+    toTop.addEventListener('click', ()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+    qs('#goComments')?.addEventListener('click', ()=>{ qs('#comments')?.scrollIntoView({behavior:'smooth'}); setTopic('comments'); });
+
+    /* ==========================
+       Comments (per-topic local + server fallback)
+       ========================== */
+    const API_BASE = '';
+    const TOPIC_PREFIX = 'ai_site_comments_topic_';
+    const nameEl = qs('#name');
+    const msgEl = qs('#message');
+    const listEl = qs('#commentList');
+    const sendBtn = qs('#sendBtn');
+    const clearBtn = qs('#clearBtn');
+    const currentTopicEl = qs('#currentTopic');
+
+    let currentTopic = 'general';
+    function setTopic(t){ currentTopic = t || 'general'; if(currentTopicEl) currentTopicEl.textContent = currentTopic; renderCommentsList(loadLocalTopic(currentTopic)); }
+
+    function escapeHTML(str){ return String(str).replace(/[&<>\"']/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":"&#39;"})[tag]); }
+    function loadLocalTopic(topic){ try{ const raw = localStorage.getItem(TOPIC_PREFIX + topic); if(!raw) return []; const arr = JSON.parse(raw); return Array.isArray(arr)?arr:[] }catch(e){return []} }
+    function saveLocalTopic(topic, arr){ localStorage.setItem(TOPIC_PREFIX + topic, JSON.stringify(arr)); }
+
+    function renderCommentsList(items){ if(!listEl) return; listEl.innerHTML = ''; if(!items || items.length === 0){ listEl.innerHTML = '<div class="muted">Пока нет комментариев — будь первым!</div>'; return } items.slice().reverse().forEach(c=>{ const card = document.createElement('div'); card.className='comment-item'; const d = new Date(c.ts); card.innerHTML = `<div class="meta"><div class="avatar">${escapeHTML((c.name||'A').slice(0,1).toUpperCase())}</div><div><strong>${escapeHTML(c.name||'Аноним')}</strong><div class="muted">${d.toLocaleString()}</div></div></div><div style="margin-top:8px;color:var(--muted)">${escapeHTML(c.msg)}</div>`; listEl.appendChild(card); }); }
+
+    async function postCommentToServer(name,msg){ try{ const res = await fetch(`${API_BASE}/api/comments`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name,msg,topic: currentTopic}) }); if(res.status===201) return {ok:true,data: await res.json()}; return {ok:false}; }catch(e){ return {ok:false}; } }
+
+    async function trySendComment(){ const name = (nameEl?.value||'').trim() || 'Аноним'; const msg = (msgEl?.value||'').trim(); if(!msg){ msgEl?.focus(); return } const arr = loadLocalTopic(currentTopic); const item = {name,msg,ts: Date.now()}; arr.push(item); saveLocalTopic(currentTopic,arr); renderCommentsList(arr); if(msgEl) msgEl.value=''; const res = await postCommentToServer(name,msg); if(!res.ok){ /* offline */ } }
+
+    sendBtn?.addEventListener('click', (e)=>{ e?.preventDefault(); trySendComment(); });
+    clearBtn?.addEventListener('click', (e)=>{ e?.preventDefault(); if(confirm('Очистить локальные комментарии этой темы?')){ localStorage.removeItem(TOPIC_PREFIX + currentTopic); renderCommentsList([]); } });
+    msgEl?.addEventListener('keydown', (e)=>{ if(e.ctrlKey && e.key === 'Enter') sendBtn?.click(); });
+
+    /* on load: set topic from hash, reveal, render, apply theme UI */
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const hash = location.hash.replace('#',''); if(['flask','js','chatgpt','comments'].includes(hash)){ const el = document.getElementById(hash); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); setTopic(hash); } else setTopic('general');
+      qsa('.fade-in').forEach(el=>el.classList.add('fade-in'));
+      const io = new IntersectionObserver((entries)=>{ entries.forEach(ent=>{ if(ent.isIntersecting){ ent.target.classList.add('visible'); io.unobserve(ent.target); } }); }, {threshold:0.12}); qsa('.fade-in').forEach(el=>io.observe(el));
+      renderCommentsList(loadLocalTopic(currentTopic)); applyThemeUI();
+    });
+
+    /* small server ping (no UI for now) */
+    (async function checkServer(){ try{ const r = await fetch('/api/ping',{cache:'no-store'}); if(r.ok){} }catch(e){} })();
+
+    // expose for debugging
+    window.setTopic = setTopic;
+  </script>
+</body>
+</html>
